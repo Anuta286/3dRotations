@@ -1,8 +1,5 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
-let l = 300;
-let w = 150;
-let newImgData = ctx.createImageData(l, w);
 function draw() {
   if (canvas.getContext) {
     ctx.beginPath();
@@ -16,55 +13,75 @@ function draw() {
     ctx.stroke();
   }
 }
+
 function newDrawFirst() {
-    let imgData = ctx.getImageData(0, 0, l, w).data;
-    let newImgData = ctx.createImageData(l, w);
-    for(let n=3; n<imgData.length; n+=4) {
-      if(imgData[n]>0) {
-        let x = ((n-3)/4)%w;
-        let y = ((n-3)/4-x)/w;
-        let newN = (x+1+(y+2)*w)*4+3;
-        newImgData.data[newN] = imgData[n];
-      }
+    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let newImgData = ctx.createImageData(canvas.width, canvas.height);
+    let dNew = new Drawing(ctx, canvas.width, canvas.height, newImgData );
+    let dOld = new Drawing(ctx, canvas.width, canvas.height, imgData );
+    for (let x=0; x<canvas.width; x++) {
+        for (let y=0; y<canvas.height; y++) {
+            dNew.setAlpha(x+1, y+2, dOld.getAlpha(x, y));
+        }
     }
-    ctx.putImageData(newImgData, 0, 0);
+    dNew.draw();
 }
 function newDrawSecond() {
-    let imgData = ctx.getImageData(0, 0, l, w).data;
-    let newImgData = ctx.createImageData(l, w);
-    for(let n=3; n<imgData.length; n+=4) {
-      if(imgData[n]>0) {
-        let x = ((n-3)/4)%w;
-        let y = ((n-3)/4-x)/w;
-        let newN = (x+1+(y-2)*w)*4+3;
-        newImgData.data[newN] = imgData[n];
-      }
+    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let newImgData = ctx.createImageData(canvas.width, canvas.height);
+    let dNew = new Drawing(ctx, canvas.width, canvas.height, newImgData );
+    let dOld = new Drawing(ctx, canvas.width, canvas.height, imgData );
+    for (let x=0; x<canvas.width; x++) {
+        for (let y=0; y<canvas.height; y++) {
+            dNew.setAlpha(x+1, y-2, dOld.getAlpha(x, y));
+        }
     }
-    ctx.putImageData(newImgData, 0, 0);
+    dNew.draw();
 }
+function newDrawRotation() {
+    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let newImgData = ctx.createImageData(canvas.width, canvas.height);
+    let dNew = new Drawing(ctx, canvas.width, canvas.height, newImgData );
+    let dOld = new Drawing(ctx, canvas.width, canvas.height, imgData );
+    for (let x=0; x<canvas.width; x++) {
+        for (let y=0; y<canvas.height; y++) {
+            let angle = Math.PI/18;
+            dNew.setAlpha(x*Math.cos(angle) - y*Math.sin(angle), y*Math.sin(angle) + x*Math.cos(angle), dOld.getAlpha(x, y));
+        }
+    }
+    dNew.draw();
+}
+//y' = y*Math.cos(10) - x*Math.sin(10)
+//x' = y*Math.sin(10) + x*Math.cos(10)
 function drawZigzag() {
-    while(i<10) {
-        let i = 0;
+    for(let i=0; i<10; i++) {
         if(i%2==0) {
-            for(let s=0; s<100; s++) {
-                setTimeout(newDrawFirst, 20);
+            for(let s=0; s<35; s++) {
+                setTimeout(()=>{
+                 newDrawFirst();
+                 newDrawRotation();
+                }, 20);
             }
         } else {
-            for(let s=0; s<100; s++) {
-                setTimeout(newDrawSecond, 20);
+            for(let s=0; s<35; s++) {
+                setTimeout(()=>{
+                 newDrawFirst();
+                 newDrawRotation();
+                }, 20);
             }
         }
-        i++;
     }
 }
-draw();
-//drawZigzag();
-for(let s=0; s<100; s++) {
-    setTimeout(newDrawSecond, 20);
+
+window.onload = ()=> {
+    draw();
+    //newDrawFirst2();
+
+    //newDrawRotation();
+    drawZigzag();
+
 }
-for(let s=0; s<100; s++) {
-    setTimeout(newDrawFirst, 20);
-}
+
 
 
 
