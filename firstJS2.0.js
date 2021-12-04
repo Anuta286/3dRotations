@@ -6,13 +6,12 @@ class Drawing {
     }
 
     setPixel(x, y) {
-        let imgData = ctx.getImageData(0, 0, w, h);
-        imgData.data[(x+y*w)*4] = 0;
-        imgData.data[(x+y*w)*4+1] = 0;
-        imgData.data[(x+y*w)*4+2] = 0;
-        imgData.data[(x+y*w)*4+3] = 1;
-        ctx.putImageData(imgData, 0, 0);
-
+        let imgData = this.ctx.getImageData(0, 0, this.w, this.h);
+        imgData.data[(x+y*this.w)*4]   = 0;
+        imgData.data[(x+y*this.w)*4+1] = 0;
+        imgData.data[(x+y*this.w)*4+2] = 0;
+        imgData.data[(x+y*this.w)*4+3] = 255;
+        this.ctx.putImageData(imgData, 0, 0);
     }
 
     setColoredPixel(x, y, r, g, b, alpha) {
@@ -27,8 +26,11 @@ class Drawing {
     //getImageData() { return imgData; }
 }
 
-let canvas = document.getElementById('canvas');
-let ctx = canvas.getContext('2d');
-let d = new Drawing(ctx, 300, 150);
+window.onload = ()=>{
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let d = new Drawing(ctx, canvas.width, canvas.height);
 //d.setColoredPixel(50, 50, 100, 70, 200, 1);
-d.setPixel(30, 30);
+    for(let i = 0; i < 100; i++)
+        d.setPixel(i, i);
+};
