@@ -1,9 +1,10 @@
 class Drawing {
-    constructor(ctx, w, h, imgData) {
+    constructor(ctx, w, h, imgData, canvas) {
         this.ctx = ctx;
         this.h = h;
         this.w = w;
         this.imgData = imgData;
+        this.canvas = canvas;
     }
 
     setPixel(x, y) {
@@ -30,17 +31,34 @@ class Drawing {
         this.imgData.data[(x+y*this.w)*4+3] = a;
     }
 
+    transform (f) {
+        let newImgData = ctx.createImageData(this.canvas.width, this.canvas.height);
+        let dNew = new Drawing(ctx, this.canvas.width, this.canvas.height, newImgData );
+        let dOld = new Drawing(ctx, this.canvas.width, this.canvas.height, this.imgData );
+        for (let x=0; x<this.canvas.width; x++) {
+            for (let y=0; y<this.canvas.height; y++) {
+                let newCoord = f(x, y);
+                dNew.setAlpha(newCoord.x, newCoord.y, dOld.getAlpha(x, y));
+            }
+        }
 
+    }
 
 }
 
-/*window.onload = ()=> {
-    let canvas = document.getElementById('canvas');
-    let ctx = canvas.getContext('2d');
-    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let d = new Drawing(ctx, canvas.width, canvas.height, imgData);
-    for(let i = 0; i < 100; i++) { d.setColoredPixel(i, i, 0, 0, 0, 255); }
-    d.draw();
-} */
 
-
+/*function newDrawFirst() {
+      let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let newImgData = ctx.createImageData(canvas.width, canvas.height);
+      let dNew = new Drawing(ctx, canvas.width, canvas.height, newImgData );
+      let dOld = new Drawing(ctx, canvas.width, canvas.height, imgData );
+      for (let x=0; x<canvas.width; x++) {
+          for (let y=0; y<canvas.height; y++) {
+              dNew.setAlpha(x+1, y+2, dOld.getAlpha(x, y));
+          }
+      }
+      center.x+=1;
+      center.y+=2;
+      dNew.draw();
+  }
+*/
