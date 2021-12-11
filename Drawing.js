@@ -1,5 +1,6 @@
 class Drawing {
     constructor(ctx, w, h, imgData, canvas) {
+        this.points = [{x: 5.12, y: 5.1}, {x: 6, y: 6}]
         this.ctx = ctx;
         this.h = h;
         this.w = w;
@@ -22,6 +23,11 @@ class Drawing {
     }
 
     draw() { this.ctx.putImageData(this.imgData, 0, 0); }
+    draw2() {
+        this.imgData = this.ctx.createImageData(0, 0, this.w, this.h);
+        for(let point of this.points)
+            this.setPixel(Math.round(point.x), Math.round(point.y));
+    }
 
     getAlpha (x, y) {
         return this.imgData.data[(x+y*this.w)*4+3];
@@ -32,16 +38,14 @@ class Drawing {
     }
 
     transform (f) {
-        let newImgData = ctx.createImageData(this.canvas.width, this.canvas.height);
-        let dNew = new Drawing(ctx, this.canvas.width, this.canvas.height, newImgData );
-        let dOld = new Drawing(ctx, this.canvas.width, this.canvas.height, this.imgData );
+        const dOld = new Drawing(ctx, this.canvas.width, this.canvas.height, this.imgData );
+        this.imgData = ctx.createImageData(this.canvas.width, this.canvas.height);
         for (let x=0; x<this.canvas.width; x++) {
             for (let y=0; y<this.canvas.height; y++) {
                 let newCoord = f(x, y);
-                dNew.setAlpha(newCoord.x, newCoord.y, dOld.getAlpha(x, y));
+                this.setAlpha(newCoord.x, newCoord.y, dOld.getAlpha(x, y));
             }
         }
-
     }
 
 }
