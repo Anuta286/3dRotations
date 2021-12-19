@@ -1,3 +1,5 @@
+'use strict'
+
 class Drawing {
     constructor(points) {
         this.points = points;
@@ -27,3 +29,6 @@ class Drawing {
     }
 }
 
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = Drawing;
+}
