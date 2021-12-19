@@ -23,9 +23,21 @@ function rotate(x, y) {
      return {x: newX, y: newY};
 }
 
+function imgDataToPoints(imData) {
+    let points = [];
+    for(let i=3; i<imData.data.length; i+=4) {
+        if (imData.data[i] != 0) {
+            let y = Math.floor(((i-3)/4)/this.w)+1;
+            let o = {y: y, x: ((i-3)/4)%y };
+            points.push(o);
+        }
+    }
+    return points;
+}
+
 function drawZigzag() {
     let imgData = ctx.getImageData(0,0,canvas.width, canvas.height);
-    let d = new Drawing (ctx, canvas.width, canvas.height, imgData, canvas);
+    let d = new Drawing (ctx, canvas.width, canvas.height, imgData, canvas, imgDataToPoints(imgData));
     for (let s = 0; s < 70; s++) {
         setTimeout(() => {
             let sign = s < 35 ? 1 : -1;
@@ -36,7 +48,7 @@ function drawZigzag() {
             center.y += 2*sign;
 
             d.transform(rotate);
-            d.draw();
+            d.draw2();
             console.log("Attempt #" + s);
         }, (s+1) * 100);
     }
