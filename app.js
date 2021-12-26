@@ -18,18 +18,19 @@ function initialDrawSmile(xCenter, yCenter) {
 function rotate(x, y) {
      let oldCoord = {x: x - center.x, y: center.y - y};
      const angle = Math.PI/36;
-     let newX = center.x + Math.round(oldCoord.x*Math.cos(angle) - oldCoord.y*Math.sin(angle));
-     let newY = -(-center.y + Math.round(oldCoord.x*Math.sin(angle) + oldCoord.y*Math.cos(angle)));
+     let newX = center.x + oldCoord.x*Math.cos(angle) - oldCoord.y*Math.sin(angle);
+     let newY = -(-center.y + oldCoord.x*Math.sin(angle) + oldCoord.y*Math.cos(angle));
      return {x: newX, y: newY};
 }
 
 function imgDataToPoints(imData) {
-    let points = [];
+    const points = [];
     for(let i=3; i<imData.data.length; i+=4) {
-        if (imData.data[i] != 0) {
-            let y = Math.floor(((i-3)/4)/this.w)+1;
-            let o = {y: y, x: ((i-3)/4)%y };
-            points.push(o);
+        if (imData.data[i] !== 0) {
+            const pixelIdx = (i - 3) / 4;
+            const y = Math.floor(pixelIdx/canvas.width)+1;
+            const point = {y: y, x: pixelIdx % canvas.width};
+            points.push(point);
         }
     }
     return points;
@@ -37,18 +38,23 @@ function imgDataToPoints(imData) {
 
 function drawZigzag() {
     let imgData = ctx.getImageData(0,0,canvas.width, canvas.height);
-    let d = new Drawing (ctx, canvas.width, canvas.height, imgData, canvas, imgDataToPoints(imgData));
-    for (let s = 0; s < 70; s++) {
+    let d = new Drawing (imgDataToPoints(imgData));
+    const iterations = 70;
+    for (let s = 0; s < iterations; s++) {
         setTimeout(() => {
-            let sign = s < 35 ? 1 : -1;
-            d.transform((x, y) => {
+            let sign = s < iterations/2 ? 1 : -1;
+            d = d.transform((x, y) => {
                 return {x: x+1, y: y+2*sign}
             });
             center.x += 1;
             center.y += 2*sign;
 
-            d.transform(rotate);
-            d.draw2();
+            d = d.transform(rotate);
+            const newCanvas = d.toCanvasPixels(canvas.width);
+            for(let i = 0; i < imgData.data.length; i++) {
+                imgData.data[i] = newCanvas[i];
+            }
+            ctx.putImageData(imgData, 0, 0);
             console.log("Attempt #" + s);
         }, (s+1) * 100);
     }
