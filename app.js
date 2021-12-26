@@ -1,7 +1,6 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let center = {x: 75, y: 75};
-let starting = {x: 0, y: 0};
 function initialDrawSmile(xCenter, yCenter) {
   if (canvas.getContext) {
     ctx.beginPath();
@@ -38,25 +37,21 @@ function imgDataToPoints(imData) {
 }
 
 function drawZigzag() {
-    let imgData = ctx.getImageData(starting.x,starting.y,canvas.width, canvas.height);
-    let d = new Drawing (imgDataToPoints(imgData), starting.x, starting.y);
+    let imgData = ctx.getImageData(0, 0,canvas.width, canvas.height);
+    let d = new Drawing(imgDataToPoints(imgData), 0, 0);
     const iterations = 70;
     for (let s = 0; s < iterations; s++) {
         setTimeout(() => {
             let sign = s < iterations/2 ? 1 : -1;
-            d = d.transform((x, y) => {
+            d = d.translate((x, y) => {
                 return {x: x+1, y: y+2*sign}
-            }, true);
-            center.x += 1;
-            center.y += 2*sign;
-            starting.x += 1;
-            starting.y += 2*sign;
+            });
             d = d.transform(rotate);
             const newCanvas = d.toCanvasPixels(canvas.width);
             for(let i = 0; i < imgData.data.length; i++) {
-                imgData.data[i+(d.x+d.y*canvas.width)*4] = newCanvas[i];
+                imgData.data[i] = newCanvas[i];
             }
-            ctx.putImageData(imgData, 0, 0);
+            ctx.putImageData(imgData, d.x, d.y);
             console.log("Attempt #" + s);
         }, (s+1) * 100);
     }

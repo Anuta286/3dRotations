@@ -7,25 +7,27 @@ class Drawing {
         this.y = y;
     }
 
-    translate (f) {
+    /**
+     * Transforms each point of the drawing according to the specified closure
+     * @returns {Drawing}
+     */
+    transform(f) {
+        const newPoints = [];
+        for (let i = 0; i < this.points.length; i++) {
+            let newCoord = f(this.points[i].x, this.points[i].y);
+            newPoints.push({y: newCoord.y, x: newCoord.x});
+        }
+        return new Drawing(newPoints, this.x, this.y);
+    }
+
+    /**
+     * Moves drawing (change its coordinate), but doesn't touch points within the drawing
+     * @returns {Drawing}
+     */
+    translate(f) {
         let newCoord = f(this.x, this.y);
         return new Drawing(this.points, newCoord.x, newCoord.y);
     }
-
-    transform (f, ifMovement) {
-        if (!ifMovement) {
-            const newPoints = [];
-            for (let i=0; i< this.points.length; i++) {
-                let newCoord = f(this.points[i].x, this.points[i].y);
-                newPoints.push({y: newCoord.y , x: newCoord.x});
-            }
-            return new Drawing(newPoints, this.x, this.y);
-        } else {
-            return translate(f);
-        }
-    }
-
-
 
     toCanvasPixels(canvasWidth) {
         const pixels = [];
@@ -33,8 +35,8 @@ class Drawing {
             const x = Math.round(point.x);
             const y = Math.round(point.y);
             const pixelIdx = x + y * canvasWidth;
-            const pixelStart = pixelIdx*4;
-            pixels[pixelStart+3] = 255;
+            const pixelStart = pixelIdx * 4;
+            pixels[pixelStart + 3] = 255;
         }
         return pixels;
     }
