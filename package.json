@@ -8,6 +8,6 @@
     "mocha-multi-reporters": "1.5.1"
   },
   "scripts": {
-    "test": "mocha \"./src/test/js/**/*Test.js\" --exclude \"./src/test/js/integration/*.js\" --exclude \"./src/test/js/ui-automated/*.js\" --exit"
+    "test": "mocha \"./src/test/js/**/*Test.js\" --exit"
   }
 }
