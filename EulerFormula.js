@@ -6,8 +6,8 @@ class EulerFormula {
     }
 
     toComplexNumber() {
-        let re = Math.cos(radians);
-        let im = Math.sin(radians);
+        let re = Math.cos(this.radians);
+        let im = Math.sin(this.radians);
         return new ComplexNumber(re, im);
     }
 

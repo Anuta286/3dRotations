@@ -39,7 +39,7 @@ function drawZigzag() {
             d = d.translate((x, y) => {
                 return {x: x+1, y: y+2*sign}
             });
-            d = d.transform(Transformations.rotateWithTrig);
+            d = d.transform(Transformations.rotateWithComplexNumbers);
 
             const newCanvas = d.toCanvasPixels(canvas.width);
             for(let i=0; i<imgData.data.length; i++) {

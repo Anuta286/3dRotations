@@ -10,11 +10,11 @@ class Transformations {
     }
 
     static rotateWithComplexNumbers(x, y) {
-        const angle = Math.PI/36;
+        const angle = Math.PI/36; //  let oldCoord = {x: x - center.x, y: center.y - y}; пототм опять рез переведи в норм систему коорд
         let cn1 = new ComplexNumber(x, y);
         let cn2 = new EulerFormula(angle).toComplexNumber();
         let cn3 = cn1.times(cn2);
-        return {x: cn3.re, y: cn.im};
+        return {x: cn3.re, y: cn3.im};
     }
 
     static rotateWithMatrices(x, y) {
