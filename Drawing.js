@@ -2,10 +2,10 @@
 
 class Drawing {
     constructor(points, x, y) {
-        this.center = {x:75, y:75};
         this.points = points;
         this.x = x;
         this.y = y;
+        this.center = this._findCenter();
     }
 
     translate(f) {
@@ -41,54 +41,34 @@ class Drawing {
         }
     }
 
-    findCenter() {
-        let maxX = findMaxX();
-        let minX = findMinX();
-        let maxY = findMaxY();
-        let minY = findMinY();
+    _findCenter() {
+        let maxX = this._findMax((p) => p.x);
+        let minX = this._findMin((p) => p.x);
+        let maxY = this._findMax((p) => p.y);
+        let minY = this._findMin((p) => p.y);
         return {x: Math.round((maxX+minX)/2), y: Math.round((maxY+minY)/2)};
     }
 
-    findMaxX() {
-        let max = -99999999999;
+    _findMax(toPrimitive) {
+        let max = Number.MIN_SAFE_INTEGER;
         for (let i=0; i<this.points.length; i++) {
-            if (max<this.points[i].x) {
-                max = this.points[i].x;
+            let primitive = toPrimitive(this.points[i]);
+            if (max < primitive) {
+                max = primitive;
             }
         }
         return max;
     }
-
-    findMinX() {
-        let min = 99999999999;
+    _findMin(toPrimitive) {
+        let min = Number.MAX_SAFE_INTEGER;
         for (let i=0; i<this.points.length; i++) {
-            if (min>this.points[i].x) {
-                min = this.points[i].x;
+            let primitive = toPrimitive(this.points[i]);
+            if (min > primitive) {
+                min = primitive;
             }
         }
         return min;
     }
-
-    findMaxY() {
-        let max = -99999999999;
-        for (let i=0; i<this.points.length; i++) {
-            if (max<this.points[i].y) {
-                max = this.points[i].y;
-            }
-        }
-        return max;
-    }
-
-    findMinY() {
-        let min = 99999999999;
-        for (let i=0; i<this.points.length; i++) {
-            if (min>this.points[i].y) {
-                min = this.points[i].y;
-            }
-        }
-        return min;
-    }
-
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
