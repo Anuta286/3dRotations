@@ -50,9 +50,8 @@ describe('Drawing', ()=> {
     });
 
     it('finding center of drawing', () => {
-        let d = new Drawing([{x: 1, y: 1}, {x: 3, y: 3}], 0, 0);
-        assert.strictEqual(d.findCenter.x, 2);
-        assert.strictEqual(d.findCenter.y, 2);
+        const center = new Drawing([{x: 1, y: 1}, {x: 3, y: 3}], 0, 0).center;
+        assert.deepStrictEqual(center, {x: 2, y: 2});
     });
 
 });

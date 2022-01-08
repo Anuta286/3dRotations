@@ -1,6 +1,5 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
-let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 let c = {x: 75, y: 75};
 function initialDrawSmile(xCenter, yCenter) {
   if (canvas.getContext) {
@@ -14,14 +13,6 @@ function initialDrawSmile(xCenter, yCenter) {
     ctx.arc(90, 65, 5, 0, Math.PI*2, true);
     ctx.stroke();
   }
-}
-
-function rotateWithTrig(x, y, center) {
-     let oldCoord = {x: x - center.x, y: center.y - y};
-     const angle = Math.PI/36;
-     let newX = center.x + oldCoord.x*Math.cos(angle) - oldCoord.y*Math.sin(angle);
-     let newY = -(-center.y + oldCoord.x*Math.sin(angle) + oldCoord.y*Math.cos(angle));
-     return {x: newX, y: newY};
 }
 
 function imgDataToPoints(imData) {
@@ -38,20 +29,22 @@ function imgDataToPoints(imData) {
 }
 
 function drawZigzag() {
+    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let d = new Drawing(imgDataToPoints(imgData), 0, 0);
     const iterations = 70;
     for (let s=0; s<iterations; s++) {
         setTimeout(() => {
             let sign = s < iterations/2 ? 1 : -1;
-            let initialDrawing = d; /*
+            let initialDrawing = d;
             d = d.translate((x, y) => {
                 return {x: x+1, y: y+2*sign}
             });
-            d = d.transform(Transformations.rotateWithTrig/*как передать параметры?*/); */
-            /*const newCanvas = d.toCanvasPixels(canvas.width);
+            d = d.transform(Transformations.rotateWithTrig);
+
+            const newCanvas = d.toCanvasPixels(canvas.width);
             for(let i=0; i<imgData.data.length; i++) {
                 imgData.data[i] = newCanvas[i];
-            }*/
+            }
             Drawing.setPointsToImageData(initialDrawing, imgData.data, 0, canvas.width);
             Drawing.setPointsToImageData(d, imgData.data , 255, canvas.width);
             ctx.putImageData(imgData, d.x, d.y);
