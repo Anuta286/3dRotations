@@ -34,5 +34,25 @@ describe('Drawing', ()=> {
         assert.strictEqual(d.points[1].x, 2);
     });
 
-});
+    it('toCanvasPixels returns something like imageData', () => {
+        let d = new Drawing([{x: 1, y: 1}, {x: 2, y: 2}], 0, 0);
+        let p = d.toCanvasPixels(900);
+        assert.strictEqual(p[3607], 255);
+        assert.strictEqual(p[7211], 255);
+    });
 
+    it('setting points to imageData', () => {
+        imageDataData = [0, 0, 0, 0];
+        const d = new Drawing([{x: 0, y: 0}], 0, 0);
+        Drawing.setPointsToImageData(d, imageDataData, 255, 900);
+        assert.strictEqual(imageDataData[3], 255, 900);
+        assert.strictEqual(imageDataData[2], 0);
+    });
+
+    it('finding center of drawing', () => {
+        let d = new Drawing([{x: 1, y: 1}, {x: 3, y: 3}], 0, 0);
+        assert.strictEqual(d.findCenter.x, 2);
+        assert.strictEqual(d.findCenter.y, 2);
+    });
+
+});

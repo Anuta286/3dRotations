@@ -1,6 +1,7 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
-let center = {x: 75, y: 75};
+let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+let c = {x: 75, y: 75};
 function initialDrawSmile(xCenter, yCenter) {
   if (canvas.getContext) {
     ctx.beginPath();
@@ -15,7 +16,7 @@ function initialDrawSmile(xCenter, yCenter) {
   }
 }
 
-function rotate(x, y) {
+function rotateWithTrig(x, y, center) {
      let oldCoord = {x: x - center.x, y: center.y - y};
      const angle = Math.PI/36;
      let newX = center.x + oldCoord.x*Math.cos(angle) - oldCoord.y*Math.sin(angle);
@@ -37,20 +38,22 @@ function imgDataToPoints(imData) {
 }
 
 function drawZigzag() {
-    let imgData = ctx.getImageData(0, 0,canvas.width, canvas.height);
     let d = new Drawing(imgDataToPoints(imgData), 0, 0);
     const iterations = 70;
-    for (let s = 0; s < iterations; s++) {
+    for (let s=0; s<iterations; s++) {
         setTimeout(() => {
             let sign = s < iterations/2 ? 1 : -1;
+            let initialDrawing = d; /*
             d = d.translate((x, y) => {
                 return {x: x+1, y: y+2*sign}
             });
-            d = d.transform(rotate);
-            const newCanvas = d.toCanvasPixels(canvas.width);
-            for(let i = 0; i < imgData.data.length; i++) {
+            d = d.transform(Transformations.rotateWithTrig/*как передать параметры?*/); */
+            /*const newCanvas = d.toCanvasPixels(canvas.width);
+            for(let i=0; i<imgData.data.length; i++) {
                 imgData.data[i] = newCanvas[i];
-            }
+            }*/
+            Drawing.setPointsToImageData(initialDrawing, imgData.data, 0, canvas.width);
+            Drawing.setPointsToImageData(d, imgData.data , 255, canvas.width);
             ctx.putImageData(imgData, d.x, d.y);
             console.log("Attempt #" + s);
         }, (s+1) * 100);
@@ -58,12 +61,6 @@ function drawZigzag() {
 }
 
 window.onload = ()=> {
-    initialDrawSmile(center.x, center.y);
+    initialDrawSmile(c.x, c.y);
     drawZigzag();
 }
-
-
-
-
-
-
