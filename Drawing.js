@@ -13,10 +13,10 @@ class Drawing {
         return new Drawing(this.points, newCoord.x, newCoord.y);
     }
 
-    transform(f) {
+    transform(f, angle) {
         const newPoints = [];
         for (let i=0; i< this.points.length; i++) {
-            let newCoord = f(this.points[i].x, this.points[i].y, this.center);
+            let newCoord = f(this.points[i].x, this.points[i].y, this.center, angle);
             newPoints.push({y: newCoord.y , x: newCoord.x});
         }
         return new Drawing(newPoints, this.x, this.y);

@@ -1,4 +1,7 @@
 'use strict'
+if (typeof module !== 'undefined') {
+    global.ComplexNumber = require('./ComplexNumber.js');
+}
 
 class EulerFormula {
     constructor(radians) {
