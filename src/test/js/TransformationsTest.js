@@ -12,7 +12,13 @@ describe('Transformations', ()=> {
 
     it('return rotated coordinates with complex numbers', () => {
         pixel = Transformations.rotateWithComplexNumbers(0, 0, {x: 1, y: 1}, Math.PI/2);
-        assert.equal(pixel.x, 2+);
+        assert.equal(pixel.x, 2);
+        assert.equal(pixel.y, 0);
+    });
+
+    it('return rotated coordinates with matrices', () => {
+        pixel = Transformations.rotateWithMatrices(0, 0, {x: 1, y: 1}, Math.PI/2);
+        assert.equal(pixel.x, 2);
         assert.equal(pixel.y, 0);
     });
 

@@ -2,6 +2,8 @@
 if (typeof module !== 'undefined') {
     global.ComplexNumber = require('./ComplexNumber.js');
     global.EulerFormula = require('./EulerFormula.js');
+    global.Vector = require('./Vector.js');
+    global.Matrix = require('./Matrix.js');
 }
 
 
@@ -21,8 +23,11 @@ class Transformations {
         return {x: cn3.re+center.x, y: center.y-cn3.im};
     }
 
-    static rotateWithMatrices(x, y) {
-
+    static rotateWithMatrices(x, y, center, angle) {
+        let v = new Vector([x-center.x, center.y-y]);
+        let m = new Matrix([new Vector([Math.cos(angle), Math.sin(angle)]), new Vector([-1*Math.sin(angle), Math.cos(angle)])]);
+        let newV = m.timesVector(v);
+        return {x: newV.vector[0]+center.x , y:  center.y-newV.vector[1]};
     }
 }
 
