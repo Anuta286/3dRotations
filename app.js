@@ -33,25 +33,22 @@ function drawZigzag() {
     let d = new Drawing(imgDataToPoints(imgData), 0, 0);
     const iterations = 70;
     let timeBefore = Date.now();
-    let w = 40;
-    let v = 15;
-    let anglePrev;
+    const angularVelocity = .5;
+    const speed = 15;
     for (let s=0; s<iterations; s++) {
         setTimeout(() => {
-            let sign = s < iterations/2 ? 1 : -1;
-            let initialDrawing = d;
-            let timeAfter = Date.now();
-            let t = timeAfter - timeBefore;
-            let l = v*t;
+            const sign = s < iterations/2 ? 1 : -1;
+            const initialDrawing = d;
+            const timeNow = Date.now();
+            const t = (timeNow - timeBefore) / 1000;
+
+            const l = speed*t;
             d = d.translate((x, y) => {
                 return {x: x+l, y: y+2*sign*l}
             });
-            timeAfter = Date.now();
-            t = timeAfter - timeBefore;
-            let angle = w*t - anglePrev;
-            anglePrev = w*t;
-            let fun = Transformations.funct(angle);
-            d = d.transform(fun);
+            const rotationRad = angularVelocity * t;
+            d = d.transform(Transformations.rotateWithMatrices(rotationRad));
+
             const newCanvas = d.toCanvasPixels(canvas.width);
             for(let i=0; i<imgData.data.length; i++) {
                 imgData.data[i] = newCanvas[i];
@@ -60,6 +57,7 @@ function drawZigzag() {
             Drawing.setPointsToImageData(d, imgData.data , 255, canvas.width);
             ctx.putImageData(imgData, d.x, d.y);
             console.log("Attempt #" + s);
+            timeBefore = timeNow;
         }, (s+1) * 100);
     }
 }
