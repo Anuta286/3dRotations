@@ -32,14 +32,26 @@ function drawZigzag() {
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let d = new Drawing(imgDataToPoints(imgData), 0, 0);
     const iterations = 70;
+    let timeBefore = Date.now();
+    let w = 40;
+    let v = 15;
+    let anglePrev;
     for (let s=0; s<iterations; s++) {
         setTimeout(() => {
             let sign = s < iterations/2 ? 1 : -1;
             let initialDrawing = d;
+            let timeAfter = Date.now();
+            let t = timeAfter - timeBefore;
+            let l = v*t;
             d = d.translate((x, y) => {
-                return {x: x+1, y: y+2*sign}
+                return {x: x+l, y: y+2*sign*l}
             });
-            d = d.transform(Transformations.rotateWithMatrices, Math.PI/36);
+            timeAfter = Date.now();
+            t = timeAfter - timeBefore;
+            let angle = w*t - anglePrev;
+            anglePrev = w*t;
+            let fun = Transformations.funct(angle);
+            d = d.transform(fun);
             const newCanvas = d.toCanvasPixels(canvas.width);
             for(let i=0; i<imgData.data.length; i++) {
                 imgData.data[i] = newCanvas[i];

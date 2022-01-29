@@ -13,10 +13,10 @@ class Drawing {
         return new Drawing(this.points, newCoord.x, newCoord.y);
     }
 
-    transform(f, angle) {
+    transform(f) {
         const newPoints = [];
         for (let i=0; i< this.points.length; i++) {
-            let newCoord = f(this.points[i].x, this.points[i].y, this.center, angle);
+            let newCoord = f(this.points[i].x, this.points[i].y, this.center);
             newPoints.push({y: newCoord.y , x: newCoord.x});
         }
         return new Drawing(newPoints, this.x, this.y);
@@ -59,6 +59,7 @@ class Drawing {
         }
         return max;
     }
+
     _findMin(toPrimitive) {
         let min = Number.MAX_SAFE_INTEGER;
         for (let i=0; i<this.points.length; i++) {

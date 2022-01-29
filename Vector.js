@@ -12,7 +12,6 @@ class Vector {
             for (let i=0; i<this.length; i++) {
                 vNew += this.vector[i] * another.vector[i];
             }
-            console.log(vNew);
             return vNew;
         } else {
             throw new Error (`Vector length (${this.length})  != another vector length (${another.length})`);

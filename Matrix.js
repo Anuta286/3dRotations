@@ -14,7 +14,6 @@ class Matrix {
             for (let i=0; i<this.matrix.length; i++) {
                 array.push(this.matrix[i].dotProduct(v));
             }
-            console.log(array);
             return new Vector(array);
         } else {
             throw new Error (`Matrix columns (${this.matrix.length})  != v.length (${v.length})`);
