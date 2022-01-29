@@ -29,7 +29,7 @@ describe('Transformations', ()=> {
     });
 
     it('return rotated coordinates with matrices', () => {
-        const pixel = Transformations.rotateWithMatrices(0, 0, {x: 1, y: 1}, Math.PI/2);
+        const pixel = Transformations.rotateWithMatrices(Math.PI/2)(0, 0, {x: 1, y: 1});
         assert.equal(pixel.x, 2);
         assert.equal(pixel.y, 0);
     });
