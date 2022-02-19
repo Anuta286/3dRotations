@@ -31,5 +31,12 @@ describe('Vector', ()=> {
         assert.equal(v.times(2).vector[1], 8);
         assert.equal(v.times(2).vector[2], 0);
     });
-
+    it('adds 2 vectors together', () => {
+       const actual = new Vector([-1, 2]).add(new Vector([2, 4]));
+       assert.equal(1, actual.getComp(0));
+       assert.equal(6, actual.getComp(1));
+    });
+    it('errs if vectors are of incompatible dimensions when adding them', () => {
+        assert.throws(() => new Vector([-1, 2]).add(new Vector([2])));
+    });
 });
