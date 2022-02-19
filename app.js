@@ -37,16 +37,16 @@ function drawZigzag() {
     const velocity = new Vector([20, 13.4]);
     for (let s=0; s<iterations; s++) {
         setTimeout(() => {
-            const sign = s < iterations/2 ? 1 : -1;
             const initialDrawing = d;
             const timeNow = Date.now();
             const t = (timeNow - timeBefore) / 1000;
             let l = velocity.times(t);
-            d = d.translate((x, y) => {
-                return {x: x+l.getComp(0), y: y+sign*l.getComp(1)}
-            });
+            /*d = d.translate((x, y) => {
+                return {x: x+l.getComp(0), y: y+l.getComp(1)}
+            }); */
             const rotationRad = angularVelocity * t;
-            d = d.transform(Transformations.rotateWithMatrices(rotationRad));
+            //d = d.transform(Transformations.rotateWithMatrices(rotationRad));
+            d = d.move(0, 0, rotationRad);
 
             const newCanvas = d.toCanvasPixels(canvas.width);
             for(let i=0; i<imgData.data.length; i++) {

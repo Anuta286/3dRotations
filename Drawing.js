@@ -6,6 +6,16 @@ class Drawing {
         this.x = x;
         this.y = y;
         this.center = this._findCenter();
+        this.transformations = [(angle) => {Transformations.rotateWithMatrices(angle)}, (angle) => {Transformations.rotateWithTrig(angle)}, (angle) => {Transformations.rotateWithComplexNumbers(angle)}];
+        this.translations = [(x, y) => {return {x: x+l.getComp(0), y: y+l.getComp(1)}}];
+    }
+
+    move(num1, num2, angle, x, y) {
+        let d = this.transform(this.transformations[num1](angle));
+        //let d = this.transform(Transformations.rotateWithMatrices(angle));
+        d = this.translate(this.translations[num2](x, y));
+        //let d = this.translate((x, y) => {return {x: x+l.getComp(0), y: y+l.getComp(1)}});
+        return d;
     }
 
     translate(f) {

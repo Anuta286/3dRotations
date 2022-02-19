@@ -54,4 +54,12 @@ describe('Drawing', ()=> {
         assert.deepStrictEqual(center, {x: 2, y: 2});
     });
 
+    it('checking work of array', () => {
+        const d = new Drawing([{x: 1, y: 1}, {x: 0, y: 0}], 0, 0);
+        let f = d.transformations[0](Math.PI/2);
+        let coord = f(1, 1, {x: 0, y: 0});
+        assert.strictEqual(coord.x, -1);
+        assert.strictEqual(coord.y, 1);
+    });
+
 });
