@@ -1,35 +1,37 @@
 'use strict'
 
 class Drawing {
-    constructor(points, x, y) {
+    constructor(points, x, y, transformations, translations) {
         this.points = points;
         this.x = x;
         this.y = y;
         this.center = this._findCenter();
-        this.transformations = [(angle) => {Transformations.rotateWithMatrices(angle)}, (angle) => {Transformations.rotateWithTrig(angle)}, (angle) => {Transformations.rotateWithComplexNumbers(angle)}];
-        this.translations = [(x, y) => {return {x: x+l.getComp(0), y: y+l.getComp(1)}}];
+        this.transformations = transformations;
+        this.translations = translations;
     }
 
-    move(num1, num2, angle, x, y) {
-        let d = this.transform(this.transformations[num1](angle));
-        //let d = this.transform(Transformations.rotateWithMatrices(angle));
-        d = this.translate(this.translations[num2](x, y));
-        //let d = this.translate((x, y) => {return {x: x+l.getComp(0), y: y+l.getComp(1)}});
+    move(t) {
+        let d = this;
+        for (let i = 0; i < this.translations.length; i++)
+            d = this.translate(this.translations[i], t);
+        for (let transformation of this.transformations)
+            d = d.transform(transformation, t);
         return d;
     }
 
-    translate(f) {
-        let newCoord = f(this.x, this.y);
-        return new Drawing(this.points, newCoord.x, newCoord.y);
+    translate(f, t) {
+        let newCoord = f(this.x, this.y, t);
+        return new Drawing(this.points, newCoord.x, newCoord.y, this.transformations, this.translations);
     }
 
-    transform(f) {
+    transform(f, t) {
+        let transformation = f(t);
         const newPoints = [];
         for (let i=0; i< this.points.length; i++) {
-            let newCoord = f(this.points[i].x, this.points[i].y, this.center);
+            let newCoord = transformation(this.points[i].x, this.points[i].y, this.center);
             newPoints.push({y: newCoord.y , x: newCoord.x});
         }
-        return new Drawing(newPoints, this.x, this.y);
+        return new Drawing(newPoints, this.x, this.y, this.transformations, this.translations);
     }
 
     toCanvasPixels(canvasWidth) {

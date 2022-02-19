@@ -18,6 +18,18 @@ class Transformations {
         };
     }
 
+    static rotateWithMatricesAndVelocity(angularVelocity) {
+        return function(t) {
+            const angle = t * angularVelocity;
+            const m = new Matrix([new Vector([Math.cos(angle), Math.sin(angle)]), new Vector([-1 * Math.sin(angle), Math.cos(angle)])]);
+            return function (x, y, center) {
+                let v = new Vector([x - center.x, center.y - y]);
+                let newV = m.timesVector(v);
+                return {x: newV.vector[0] + center.x, y: center.y - newV.vector[1]};
+            };
+        }
+    }
+
     static rotateWithTrig(angle) {
         return function (x, y, center) {
             let oldCoord = {x: x - center.x, y: center.y - y};
