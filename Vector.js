@@ -1,9 +1,9 @@
 'use strict'
 
 class Vector {
-    constructor(vector) {
-        this.vector = vector;
-        this.size = vector.length;
+    constructor(array) {
+        this.vector = array;
+        this.size = array.length;
         this.length = () => {
             let sum = 0;
             for(let i=0; i<this.size; i++) {
@@ -15,6 +15,15 @@ class Vector {
 
     getComp(idx) {
         return this.vector[idx];
+    }
+
+    add(that) {
+        if(this.size !== that.size)
+            throw new Error(`Arrays of incompatible dimensions: ${this.size} and ${that.size}`);
+        const result = [];
+        for (let i = 0; i < this.size; i++)
+            result.push(this.getComp(i) + that.getComp(i));
+        return new Vector(result)
     }
 
     dotProduct(another) {

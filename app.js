@@ -30,23 +30,24 @@ function imgDataToPoints(imData) {
 
 function drawZigzag() {
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let d = new Drawing(imgDataToPoints(imgData), 0, 0);
     const iterations = 70;
     let timeBefore = Date.now();
-    const angularVelocity = .5;
+
+    const angularVelocity = .1;
     const velocity = new Vector([20, 13.4]);
+
+    let d = new Drawing(imgDataToPoints(imgData), 0, 0,
+        [Transformations.rotateWithMatricesAndVelocity(angularVelocity)],
+        [(x, y, t) => {
+            const newPosition = new Vector([x, y]).add(velocity.times(t));
+            return {x: newPosition.getComp(0), y: newPosition.getComp(1)}
+        }]);
     for (let s=0; s<iterations; s++) {
         setTimeout(() => {
             const initialDrawing = d;
             const timeNow = Date.now();
             const t = (timeNow - timeBefore) / 1000;
-            let l = velocity.times(t);
-            /*d = d.translate((x, y) => {
-                return {x: x+l.getComp(0), y: y+l.getComp(1)}
-            }); */
-            const rotationRad = angularVelocity * t;
-            //d = d.transform(Transformations.rotateWithMatrices(rotationRad));
-            d = d.move(0, 0, rotationRad);
+            d = d.move(t);
 
             const newCanvas = d.toCanvasPixels(canvas.width);
             for(let i=0; i<imgData.data.length; i++) {
