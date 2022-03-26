@@ -1,0 +1,64 @@
+%! Author = Админ
+%! Date = 26.03.2022
+
+% Preamble
+\documentclass[11pt]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage{mathtools}
+\graphicspath{{pictures/}}
+
+% Document
+\begin{document}
+    \section{Problem}
+    a) Q-? \newline
+    \begin{gather*}
+        (EP=a)\\
+        \overline{PE}(2-x_0;-y_0;-z_0)\\
+        a_x(t)=(2-x_0)t+x_0\\
+        a_y(t)=-y_0t+y_0\\
+        a_z(t)=-z_0t+z_0\\
+    \end{gather*}
+    Plane (yz): x=0 \newline
+    \begin{gather*}
+        0=(2-x_0)t+x_0\\
+        t=-\frac{x_0}{2-x_0}\\
+        a_x=0\\
+        a_y=-y_0(-\frac{x_0}{2-x_0})+y_0=\frac{x_0y_0}{2-x_0}+y_0\\
+        a_z=\frac{x_0z_0}{2-x_0}+z_0\\
+    \end{gather*}
+    Answer: \[Q (0; \frac{x_0y_0}{2-x_0}+y_0; \frac{x_0z_0}{2-x_0}+z_0)\]
+
+    b) It can look like line segment (screen projection) or single point (if it locates on "EP" line).
+
+    c) \[P_0(-1;-3;1), P_1(-2;4;6)\]
+    \[\overline{P_0E}(3;3;-1), \overline{P_1E}(4;-4;-6)\]
+    \[Q_0(0;-2;\frac{2}{3})\]
+    \[Q_1(0;2;3)\]
+    Answer: line segment \(Q_0 Q_1\) is drawn on the screen.
+
+    e) \[\overline{ED}(-1;0;1), \overline{EG}(-1;1;1)\]
+    Plane \(\alpha\):
+    \[\overline{N}=\overline{ED}\times\overline{EG}= \begin{bmatrix}
+                                                     -1 \\
+                                                      0 \\
+                                                     -1
+                                                     \end{bmatrix} \]
+    \[-x-z=d\]
+    E: \[-2+0-0=-2\]
+    D: \[-1+0-1=-2\]
+    \[d=-2\]
+    Equation of plane \(\alpha: x+z=2\)
+    \[\overline{P_0P_1}(-1;7;5)\]
+    \[x(t)=-t-1\]
+    \[y(t)=7t+3\]
+    \[z(t)=5t+1\]
+    \[P_n(-t-1; 7t+3; 5t+1)\]
+    \[x+z=2 => -t-1+5t+1=4t>2 => t>0.5\]
+    Answer: So, that portion of the trajectory is hidden, which has \(t>0.5\) in the parametric equation of a line of trajectory.
+
+
+\end{document}
