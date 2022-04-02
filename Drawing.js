@@ -1,13 +1,15 @@
 'use strict'
 
 class Drawing {
-    constructor(points, x, y, transformations, translations) {
+    constructor(points, x, y, z, transformations, translations, plane, eye) {
         this.points = points;
         this.x = x;
         this.y = y;
+        this.z = z;
         this.center = this._findCenter();
         this.transformations = transformations;
         this.translations = translations;
+        this.t = {plane: plane, eye: eye};
     }
 
     move(t) {
@@ -16,22 +18,22 @@ class Drawing {
             d = this.translate(this.translations[i], t);
         for (let transformation of this.transformations)
             d = d.transform(transformation, t);
-        return d;
+        return d;  //
     }
 
     translate(f, t) {
         let newCoord = f(this.x, this.y, t);
-        return new Drawing(this.points, newCoord.x, newCoord.y, this.transformations, this.translations);
+        return new Drawing(this.points, newCoord.x, newCoord.y, this.z, this.transformations, this.translations, this.t.plane, this.t.eye);
     }
 
     transform(f, t) {
         let transformation = f(t);
         const newPoints = [];
-        for (let i=0; i< this.points.length; i++) {
-            let newCoord = transformation(this.points[i].x, this.points[i].y, this.center);
-            newPoints.push({y: newCoord.y , x: newCoord.x});
+        for (let i=0; i<this.points.length; i++) {
+            let newCoord = transformation(this.points[i].x, this.points[i].y, this.center, this.z);
+            newPoints.push({y: newCoord.y , x: newCoord.x, z: newCoord.z});
         }
-        return new Drawing(newPoints, this.x, this.y, this.transformations, this.translations);
+        return new Drawing(newPoints, this.x, this.y, this.z, this.transformations, this.translations, this.t.plane, this.t.eye); //
     }
 
     toCanvasPixels(canvasWidth) {

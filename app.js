@@ -1,6 +1,8 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
-let c = {x: 75, y: 75};
+let c = {x: 75, y: 75, z: -5};
+let plane = {a: 0, b: 0, c: 1, d: 50};
+let eye = {x: 0, y: 0, z: 100};
 function initialDrawSmile(xCenter, yCenter) {
   if (canvas.getContext) {
     ctx.beginPath();
@@ -21,7 +23,7 @@ function imgDataToPoints(imData) {
         if (imData.data[i] !== 0) {
             const pixelIdx = (i - 3) / 4;
             const y = Math.floor(pixelIdx/canvas.width)+1;
-            const point = {y: y, x: pixelIdx % canvas.width};
+            const point = {y: y, x: pixelIdx % canvas.width, z: -5};
             points.push(point);
         }
     }
@@ -33,29 +35,29 @@ function drawZigzag() {
     const iterations = 70;
     let timeBefore = Date.now();
 
-    const angularVelocity = .1;
+    const angularVelocity = 1;
     const velocity = new Vector([20, 13.4]);
 
-    let d = new Drawing(imgDataToPoints(imgData), 0, 0,
+    let d = new Drawing(imgDataToPoints(imgData), 0, 0, -5,
         [Transformations.rotateWithMatricesAndVelocity(angularVelocity)],
         [(x, y, t) => {
             const newPosition = new Vector([x, y]).add(velocity.times(t));
-            return {x: newPosition.getComp(0), y: newPosition.getComp(1)}
-        }]);
+            return {x: newPosition.getComp(0), y: newPosition.getComp(1), z: -5}
+        }], plane, eye);
     for (let s=0; s<iterations; s++) {
         setTimeout(() => {
             const initialDrawing = d;
             const timeNow = Date.now();
             const t = (timeNow - timeBefore) / 1000;
             d = d.move(t);
-
-            const newCanvas = d.toCanvasPixels(canvas.width);
+            let projection = d.transform(Transformations.projecting, d.t);
+            const newCanvas = projection.toCanvasPixels(canvas.width);
             for(let i=0; i<imgData.data.length; i++) {
                 imgData.data[i] = newCanvas[i];
             }
             Drawing.setPointsToImageData(initialDrawing, imgData.data, 0, canvas.width);
-            Drawing.setPointsToImageData(d, imgData.data , 255, canvas.width);
-            ctx.putImageData(imgData, d.x, d.y);
+            Drawing.setPointsToImageData(projection, imgData.data , 255, canvas.width);
+            ctx.putImageData(imgData, projection.x, projection.y);
             console.log("Attempt #" + s);
             timeBefore = timeNow;
         }, (s+1) * 100);
