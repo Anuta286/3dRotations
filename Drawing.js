@@ -9,7 +9,8 @@ class Drawing {
         this.center = this._findCenter();
         this.transformations = transformations;
         this.translations = translations;
-        this.t = {plane: plane, eye: eye};
+        this.plane = plane;
+        this.eye = eye;
     }
 
     move(t) {
@@ -18,12 +19,12 @@ class Drawing {
             d = this.translate(this.translations[i], t);
         for (let transformation of this.transformations)
             d = d.transform(transformation, t);
-        return d;  //
+        return d;
     }
 
     translate(f, t) {
-        let newCoord = f(this.x, this.y, t);
-        return new Drawing(this.points, newCoord.x, newCoord.y, this.z, this.transformations, this.translations, this.t.plane, this.t.eye);
+        let newCoord = f(this.x, this.y, this.z, t);
+        return new Drawing(this.points, newCoord.x, newCoord.y, newCoord.z, this.transformations, this.translations, this.plane, this.eye);
     }
 
     transform(f, t) {
@@ -33,7 +34,7 @@ class Drawing {
             let newCoord = transformation(this.points[i].x, this.points[i].y, this.center, this.z);
             newPoints.push({y: newCoord.y , x: newCoord.x, z: newCoord.z});
         }
-        return new Drawing(newPoints, this.x, this.y, this.z, this.transformations, this.translations, this.t.plane, this.t.eye); //
+        return new Drawing(newPoints, this.x, this.y, this.z, this.transformations, this.translations, this.plane, this.eye);
     }
 
     toCanvasPixels(canvasWidth) {

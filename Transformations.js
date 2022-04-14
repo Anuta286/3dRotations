@@ -39,18 +39,6 @@ class Transformations {
         }
     }
 
-    static projecting (t) {
-        const plane = t.plane;
-        const eye = t.eye;
-        return function (x0, y0, center, z0) {
-            let t = (plane.d-plane.a*x0-plane.b*y0-plane.c*z0)/(plane.a*(eye.x-x0)+plane.b*(eye.y-y0)+plane.c*(eye.z-z0));
-            let newX = (eye.x-x0)*t+x0;
-            let newY = (eye.y-y0)*t+y0;
-            let newZ = (eye.z-z0)*t+z0;
-            return {x: newX, y: newY, z: newZ};
-        }
-    }
-
     static rotateWithComplexNumbers(angle) {
         return function (x, y, center) {
             let oldCoord = {x: x - center.x, y: center.y - y};

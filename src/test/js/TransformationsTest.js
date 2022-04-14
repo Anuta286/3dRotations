@@ -33,15 +33,4 @@ describe('Transformations', ()=> {
         assert.equal(pixel.x, 2);
         assert.equal(pixel.y, 0);
     });
-
-    it('return projected coordinates', () => {
-        const plane = {a: 1, b: 1, c: 1, d: 1};
-        const eye = {x: 1, y: 0, z: 1};
-        const f = Transformations.projecting(plane, eye);
-        const center = {x: 0, y: 4, z: 0};
-        assert.strictEqual(f(2, 2, 2, center).x, 0.75);
-        assert.strictEqual(f(2, 2, 2, center).y, -0.5);
-        assert.strictEqual(f(2, 2, 2, center).z, 0.75);
-    });
-
 });
