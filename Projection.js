@@ -1,5 +1,9 @@
 'use strict'
 
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    const Vector = require('./Vector');
+}
+
 class Projection {
     static project(d) {
         let transformation = Projection._fun(d.plane, d.eye);
@@ -13,11 +17,11 @@ class Projection {
 
     static _fun(plane, eye) {
         return function (x0, y0, z0) {
+            let v0 = new Vector([x0, y0, z0]);
+            let vE = new Vector([eye.x, eye.y, eye.z]);
             let t = (plane.d-plane.a*x0-plane.b*y0-plane.c*z0)/(plane.a*(eye.x-x0)+plane.b*(eye.y-y0)+plane.c*(eye.z-z0));
-            let newX = (eye.x-x0)*t+x0;
-            let newY = (eye.y-y0)*t+y0;
-            let newZ = (eye.z-z0)*t+z0;
-            return {x: newX, y: newY, z: newZ};
+            let result = vE.add(v0.times(-1)).times(t).add(v0);
+            return {x: result.getComp(0), y: result.getComp(1), z: result.getComp(2)};
         }
     }
 }
