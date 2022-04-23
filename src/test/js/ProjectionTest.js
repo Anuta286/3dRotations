@@ -10,5 +10,4 @@ describe('Projection', ()=> {
         assert.strictEqual(f(0, 0, 0).y, 0);
         assert.strictEqual(f(0, 0, 0).z, 0.5);
     });
-
 });
