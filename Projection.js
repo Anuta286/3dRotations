@@ -1,7 +1,8 @@
 'use strict'
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    const Vector = require('./Vector');
+    global.Vector = require('./Vector');
+    global.Drawing = require('./Drawing');
 }
 
 class Projection {
