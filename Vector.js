@@ -17,6 +17,10 @@ class Vector {
         return this.vector[idx];
     }
 
+    setComp(idx, el) {
+        this.vector[idx] = el;
+    }
+
     add(that) {
         if(this.size !== that.size)
             throw new Error(`Arrays of incompatible dimensions: ${this.size} and ${that.size}`);

@@ -2,9 +2,8 @@ let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let c = {x: 75, y: 75, z: -5};
 let plane = {a: 0, b: 0, c: 1, d: 50};
-let eye = {x: 0, y: 0, z: 100};
-let zGo = 0;
-let xGo = 0;
+let eye = new Vector([0, 0, 100]);
+let xzGo = new Vector([0, 0]);
 let t = 1;
 function initialDrawSmile(xCenter, yCenter) {
   if (canvas.getContext) {
@@ -73,27 +72,26 @@ window.onload = ()=> {
     initialDrawSmile(c.x, c.y);
     window.addEventListener('keydown', (event) => {
         if (event.key === 'w') {
-            zGo += 10;
+            xzGo.setComp(1, xzGo.getComp(1)+10);
         }
         if (event.key === 's') {
-            zGo += -10;
+            xzGo.setComp(1, xzGo.getComp(1)-10);
         }
         if (event.key === 'a') {
-            xGo += 10;
+            xzGo.setComp(0, xzGo.getComp(1)+30);
         }
         if (event.key === 'd') {
-            xGo += -10;
+            xzGo.setComp(0, xzGo.getComp(1)-30);
         }
     });
     drawZigzag();
 }
-function goEye (d) {
-
-    d.eye.z += zGo;
-    d.plane.z += zGo;
-    d.eye.x += xGo;
-    d.plane.x += xGo;
-    return d;
+function goEye (eye, plane) {
+    eye.setComp(2, eye.getComp(2)+xzGo.getComp(1));
+    plane.z += xzGo.getComp(1);
+    eye.setComp(0, eye.getComp(2)+xzGo.getComp(0));
+    plane.x += xzGo.getComp(0);
+    return {pl: plane, e: eye};
 }
 /*
 function goR (d) {
