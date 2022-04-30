@@ -47,28 +47,26 @@ function drawZigzag() {
             const newPosition = new Vector([x, y, z]).add(velocity.times(t));
             return {x: newPosition.getComp(0), y: newPosition.getComp(1), z: newPosition.getComp(2)}
         }], plane, eye);
-    for (let s=0; s<iterations; s++) {
-        setTimeout(() => {
-            const initialDrawing = d;
-            const timeNow = Date.now();
-            const t = (timeNow - timeBefore) / 1000;
-            d = d.move(t);
-            d = goEye(d);
-            //d = goAD(d);
-            let projection = Projection.project(d);
-            const newCanvas = projection.toCanvasPixels(canvas.width);
-            for(let i=0; i<imgData.data.length; i++) {
-                imgData.data[i] = newCanvas[i];
-            }
-            Drawing.setPointsToImageData(initialDrawing, imgData.data, 0, canvas.width);
-            Drawing.setPointsToImageData(projection, imgData.data , 255, canvas.width);
-            ctx.putImageData(imgData, projection.x, projection.y);
-            console.log("Attempt #" + s);
-            timeBefore = timeNow;
-            zGo = 0;
-            xGo = 0;
-        }, (s+1) * 100);
+    function render() {
+        const initialDrawing = d;
+        const timeNow = Date.now();
+        const t = (timeNow - timeBefore) / 1000;
+        d = d.move(t);
+        d = goEye(d);
+        let projection = Projection.project(d);
+        const newCanvas = projection.toCanvasPixels(canvas.width);
+        for(let i=0; i<imgData.data.length; i++) {
+            imgData.data[i] = newCanvas[i];
+        }
+        Drawing.setPointsToImageData(initialDrawing, imgData.data, 0, canvas.width);
+        Drawing.setPointsToImageData(projection, imgData.data , 255, canvas.width);
+        ctx.putImageData(imgData, projection.x, projection.y);
+        timeBefore = timeNow;
+        zGo = 0;
+        xGo = 0;
+        requestAnimationFrame(render);
     }
+    render();
 }
 
 window.onload = ()=> {
