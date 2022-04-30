@@ -5,14 +5,14 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 }
 
 class Projection {
-    static project(d) {
-        let transformation = Projection._fun(d.plane, d.eye);
+    static project(eye, plane, d) {
+        let transformation = Projection._fun(plane, eye);
         const newPoints = [];
         for (let i=0; i<d.points.length; i++) {
             let newCoord = transformation(d.points[i].x, d.points[i].y, d.z);
             newPoints.push({y: newCoord.y , x: newCoord.x, z: newCoord.z});
         }
-        return new Drawing(newPoints, d.x, d.y, d.z, d.transformations, d.translations, d.plane, d.eye);
+        return new Drawing(newPoints, d.x, d.y, d.z, d.transformations, d.translations);
     }
 
     static _fun(plane, eye) {

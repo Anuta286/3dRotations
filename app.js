@@ -44,14 +44,14 @@ function drawZigzag() {
         [(x, y, z, t) => {
             const newPosition = new Vector([x, y, z]).add(velocity.times(t));
             return {x: newPosition.getComp(0), y: newPosition.getComp(1), z: newPosition.getComp(2)}
-        }], plane, eye);
+        }]);
     function render() {
         const initialDrawing = d;
         const timeNow = Date.now();
         const t = (timeNow - timeBefore) / 1000;
         d = d.move(t);
         goEye(eye, plane);
-        let projection = Projection.project(d);
+        let projection = Projection.project(eye, plane, d);
         const newCanvas = projection.toCanvasPixels(canvas.width);
         for(let i=0; i<imgData.data.length; i++) {
             imgData.data[i] = newCanvas[i];

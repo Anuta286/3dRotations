@@ -1,7 +1,7 @@
 'use strict'
 
 class Drawing {
-    constructor(points, x, y, z, transformations, translations, plane, eye) {
+    constructor(points, x, y, z, transformations, translations) {
         this.points = points;
         this.x = x;
         this.y = y;
@@ -9,8 +9,6 @@ class Drawing {
         this.center = this._findCenter();
         this.transformations = transformations;
         this.translations = translations;
-        this.plane = plane;
-        this.eye = eye;
     }
 
     move(t) {
@@ -24,7 +22,7 @@ class Drawing {
 
     translate(f, t) {
         let newCoord = f(this.x, this.y, this.z, t);
-        return new Drawing(this.points, newCoord.x, newCoord.y, newCoord.z, this.transformations, this.translations, this.plane, this.eye);
+        return new Drawing(this.points, newCoord.x, newCoord.y, newCoord.z, this.transformations, this.translations);
     }
 
     transform(f, t) {
@@ -34,7 +32,7 @@ class Drawing {
             let newCoord = transformation(this.points[i].x, this.points[i].y, this.center, this.z);
             newPoints.push({y: newCoord.y , x: newCoord.x, z: newCoord.z});
         }
-        return new Drawing(newPoints, this.x, this.y, this.z, this.transformations, this.translations, this.plane, this.eye);
+        return new Drawing(newPoints, this.x, this.y, this.z, this.transformations, this.translations);
     }
 
     toCanvasPixels(canvasWidth) {
