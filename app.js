@@ -1,10 +1,10 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let c = {x: 75, y: 75, z: -5};
-let plane = {a: 0, b: 0, c: 1, d: 50};
+let plane = {a: 1, b: 1, c: 10, d: 50};
 let eye = new Vector([0, 0, 100]);
 let xzGo = new Vector([0, 0]);
-let leftRight = 0;
+let leftRight = 10;
 function initialDrawSmile(xCenter, yCenter) {
   if (canvas.getContext) {
     ctx.beginPath();
@@ -41,25 +41,28 @@ function drawZigzag() {
         [Transformations.rotateWithMatricesAndVelocity(angularVelocity)],
         [(x, y, z, t) => {
             const newPosition = new Vector([x, y, z]).add(velocity.times(t));
-            return {x: newPosition.getComp(0), y: newPosition.getComp(1), z: newPosition.getComp(2)}
-        }]);
+            return {x: Math.round(newPosition.getComp(0)), y: Math.round(newPosition.getComp(1)), z: Math.round(newPosition.getComp(2))}
+        }]  );
     function render() {
-        const initialDrawing = d;
+        //const initialDrawing = d;
         const timeNow = Date.now();
         const t = (timeNow - timeBefore) / 1000;
-        d = d.move(t);
+        plane = RotationPlane.rotatePlane(eye, plane, leftRight);
         goEye(eye, plane);
+        d = d.move(t);
         let projection = Projection.project(eye, plane, d);
         const newCanvas = projection.toCanvasPixels(canvas.width);
         for(let i=0; i<imgData.data.length; i++) {
             imgData.data[i] = newCanvas[i];
         }
-        Drawing.setPointsToImageData(initialDrawing, imgData.data, 0, canvas.width);
-        Drawing.setPointsToImageData(projection, imgData.data , 255, canvas.width);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //Drawing.setPointsToImageData(initialDrawing, imgData.data, 0, canvas.width);
+        //Drawing.setPointsToImageData(projection, imgData.data , 255, canvas.width);
         ctx.putImageData(imgData, projection.x, projection.y);
         timeBefore = timeNow;
         xzGo.setComp(0, 0);
         xzGo.setComp(1, 0);
+        leftRight = 0;
         requestAnimationFrame(render);
     }
     render();
@@ -69,24 +72,29 @@ window.onload = ()=> {
     initialDrawSmile(c.x, c.y);
     window.addEventListener('keydown', (event) => {
         if (event.key === 'w') {
-            xzGo.setComp(1, xzGo.getComp(1)+10);
+            xzGo.setComp(1, xzGo.getComp(1)-10);
+            console.log("w");
         }
         if (event.key === 's') {
-            xzGo.setComp(1, xzGo.getComp(1)-10);
+            xzGo.setComp(1, xzGo.getComp(1)+10);
+            console.log("s");
         }
         if (event.key === 'a') {
-            xzGo.setComp(0, xzGo.getComp(1)-10);
+            xzGo.setComp(0, xzGo.getComp(1)+10);
+            console.log("a");
         }
         if (event.key === 'd') {
-            xzGo.setComp(0, xzGo.getComp(1)+10);
+            xzGo.setComp(0, xzGo.getComp(1)-10);
+            console.log("d");
         }
     });
     window.addEventListener('wheel', function(e) {
         if (e.deltaY>0) {
             leftRight += 10;
-        } else {
+        } else if (e.deltaY<0) {
             leftRight -= 10;
         }
+        console.log(leftRight)
     });
     drawZigzag();
 }
@@ -107,9 +115,3 @@ function goR (d) {
     return d;
 }
 */
-
-function rotatePlane(eye, plane) {
-    // find 3 points on initial plane, rotate them around line though the eye, and calculate rotated plane.
-}
-
-
