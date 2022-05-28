@@ -1,5 +1,5 @@
-const Projection = require('../../../Projection');
-const Drawing = require('../../../Drawing');
+const Projection = require('../../../main/src/main/javaScript/Projection');
+const Drawing = require('../../../main/src/main/javaScript/Drawing');
 const assert = require('assert');
 
 describe('Projection', ()=> {

@@ -1,4 +1,4 @@
-const Vector = require('../../../Vector');
+const Vector = require('../../../main/src/main/javaScript/Vector');
 const assert = require('assert');
 
 describe('Vector', ()=> {

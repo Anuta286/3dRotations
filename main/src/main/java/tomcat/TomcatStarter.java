@@ -1,3 +1,5 @@
+package tomcat;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
@@ -18,10 +20,10 @@ public class TomcatStarter {
 
         Connector connector = new Connector();
         connector.setPort(8080);
-        AbstractProtocol protocolHandler = (AbstractProtocol) connector.getProtocolHandler();
+        @SuppressWarnings("rawtypes") AbstractProtocol protocolHandler = (AbstractProtocol) connector.getProtocolHandler();
         protocolHandler.setExecutor(createExecutor());
         addHelloWorldServlet(context);
-        addDisplayHTMLfileServlet(context);
+        addDisplayHtmlFileServlet(context);
 
         tomcat.setConnector(connector);
         tomcat.start();
@@ -31,19 +33,19 @@ public class TomcatStarter {
     private static void addHelloWorldServlet(Context context) {
         Wrapper servlet = context.createWrapper();
         servlet.setName("hello-world");
-        servlet.setServletClass("HelloWorld");
+        servlet.setServletClass("tomcat.HelloWorld");
 
         context.addChild(servlet);
         context.addServletMappingDecoded("/hi", "hello-world");
     }
 
-    private static void addDisplayHTMLfileServlet(Context context) {
+    private static void addDisplayHtmlFileServlet(Context context) {
         Wrapper servlet = context.createWrapper();
-        servlet.setName("display-HTML-file");
-        servlet.setServletClass("DisplayHTMLfile");
+        servlet.setName("display-file");
+        servlet.setServletClass("tomcat.DisplayFile");
 
         context.addChild(servlet);
-        context.addServletMappingDecoded("/First.html", "display-HTML-file");
+        context.addServletMappingDecoded("/", "display-file");
     }
 
     private static ThreadPoolExecutor createExecutor() {

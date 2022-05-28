@@ -1,5 +1,5 @@
-const RotationPlane = require('../../../RotationPlane');
-const Vector = require('../../../Vector');
+const RotationPlane = require('../../../main/src/main/javaScript/RotationPlane');
+const Vector = require('../../../main/src/main/javaScript/Vector');
 const assert = require('assert');
 
 describe('RotationPlane', ()=> {

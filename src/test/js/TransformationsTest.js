@@ -1,6 +1,6 @@
-const Transformations = require('../../../Transformations');
-const ComplexNumber = require('../../../ComplexNumber');
-const EulerFormula = require('../../../EulerFormula');
+const Transformations = require('../../../main/src/main/javaScript/Transformations');
+const ComplexNumber = require('../../../main/src/main/javaScript/ComplexNumber');
+const EulerFormula = require('../../../main/src/main/javaScript/EulerFormula');
 const assert = require('assert');
 
 describe('Transformations', ()=> {

@@ -1,4 +1,4 @@
-const ComplexNumber = require('../../../ComplexNumber');
+const ComplexNumber = require('../../../main/src/main/javaScript/ComplexNumber');
 const assert = require('assert');
 
 describe('ComplexNumber', ()=> {

@@ -1,5 +1,5 @@
-const EulerFormula = require('../../../EulerFormula');
-const ComplexNumber = require('../../../ComplexNumber');
+const EulerFormula = require('../../../main/src/main/javaScript/EulerFormula');
+const ComplexNumber = require('../../../main/src/main/javaScript/ComplexNumber');
 const assert = require('assert');
 
 describe('EulerFormula', ()=> {

@@ -1,4 +1,4 @@
-const Drawing = require('../../../Drawing');
+const Drawing = require('../../../main/src/main/javaScript/Drawing');
 const assert = require('assert');
 
 describe('Drawing', ()=> {

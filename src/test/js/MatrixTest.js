@@ -1,5 +1,5 @@
-const Matrix = require('../../../Matrix');
-const Vector = require('../../../Vector');
+const Matrix = require('../../../main/src/main/javaScript/Matrix');
+const Vector = require('../../../main/src/main/javaScript/Vector');
 const assert = require('assert');
 
 describe('Matrix', ()=> {
