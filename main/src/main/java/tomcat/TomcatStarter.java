@@ -23,7 +23,9 @@ public class TomcatStarter {
         @SuppressWarnings("rawtypes") AbstractProtocol protocolHandler = (AbstractProtocol) connector.getProtocolHandler();
         protocolHandler.setExecutor(createExecutor());
         addHelloWorldServlet(context);
-        addDisplayHtmlFileServlet(context);
+        addDisplayFileServlet(context);
+        addDataServlet(context);
+        addDrawingServlet(context);
 
         tomcat.setConnector(connector);
         tomcat.start();
@@ -39,13 +41,31 @@ public class TomcatStarter {
         context.addServletMappingDecoded("/hi", "hello-world");
     }
 
-    private static void addDisplayHtmlFileServlet(Context context) {
+    private static void addDisplayFileServlet(Context context) {
         Wrapper servlet = context.createWrapper();
         servlet.setName("display-file");
         servlet.setServletClass("tomcat.DisplayFile");
 
         context.addChild(servlet);
         context.addServletMappingDecoded("/", "display-file");
+    }
+
+    private static void addDataServlet(Context context) {
+        Wrapper servlet = context.createWrapper();
+        servlet.setName("data-servlet");
+        servlet.setServletClass("tomcat.DataServlet");
+
+        context.addChild(servlet);
+        context.addServletMappingDecoded("/data", "data-servlet");
+    }
+
+    private static void addDrawingServlet(Context context) {
+        Wrapper servlet = context.createWrapper();
+        servlet.setName("drawing-servlet");
+        servlet.setServletClass("tomcat.DrawingServlet");
+
+        context.addChild(servlet);
+        context.addServletMappingDecoded("/drawing", "drawing-servlet");
     }
 
     private static ThreadPoolExecutor createExecutor() {

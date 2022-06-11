@@ -1,7 +1,7 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let c = {x: 75, y: 75, z: -5};
-let plane = {a: 1, b: 1, c: 10, d: 50};
+let plane = {a: 0, b: 0, c: 10, d: 50};
 let eye = new Vector([0, 0, 100]);
 let xzGo = new Vector([0, 0]);
 let leftRight = 10;
@@ -21,8 +21,8 @@ function initialDrawSmile(xCenter, yCenter) {
 
 function imgDataToPoints(imData) {
     const points = [];
-    for(let i=3; i<imData.data.length; i+=4) {
-        if (imData.data[i] !== 0) {
+    for(let i=3; i<imData.length; i+=4) {
+        if (imData[i] !== 0) {
             const pixelIdx = (i - 3) / 4;
             const y = Math.floor(pixelIdx/canvas.width)+1;
             const point = {y: y, x: pixelIdx % canvas.width, z: -5};
@@ -32,19 +32,40 @@ function imgDataToPoints(imData) {
     return points;
 }
 
-function drawZigzag() {
+/* function shareDataToServer() {
+    let data = ctx.getImageData(0, 0, canvas.width, canvas.height).data.join();
+    const httpRequest = new XMLHttpRequest();
+    httpRequest.open("POST", "/data", true);
+    httpRequest.setRequestHeader("Content-Type", "text/plain");
+    httpRequest.onreadystatechange = function() {
+        getDataFromServer();
+    };
+    httpRequest.send(data);
+} */
+
+function getDataFromServer(){
+    const httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function() {
+        const text = httpRequest.responseText;
+        drawZigzag(text.split(','));
+    };
+    httpRequest.open("GET", "/drawing", true);
+    httpRequest.send();
+}
+
+function drawZigzag(data) {
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    imgData.data = data;
     let timeBefore = Date.now();
     const angularVelocity = 1;
     const velocity = new Vector([20, 13.4, 0]);
-    let d = new Drawing(imgDataToPoints(imgData), 0, 0, -5,
+    let d = new Drawing(imgDataToPoints(imgData.data), 0, 0, -5,
         [Transformations.rotateWithMatricesAndVelocity(angularVelocity)],
         [(x, y, z, t) => {
             const newPosition = new Vector([x, y, z]).add(velocity.times(t));
             return {x: Math.round(newPosition.getComp(0)), y: Math.round(newPosition.getComp(1)), z: Math.round(newPosition.getComp(2))}
         }]  );
     function render() {
-        //const initialDrawing = d;
         const timeNow = Date.now();
         const t = (timeNow - timeBefore) / 1000;
         plane = RotationPlane.rotatePlane(eye, plane, leftRight);
@@ -56,8 +77,6 @@ function drawZigzag() {
             imgData.data[i] = newCanvas[i];
         }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        //Drawing.setPointsToImageData(initialDrawing, imgData.data, 0, canvas.width);
-        //Drawing.setPointsToImageData(projection, imgData.data , 255, canvas.width);
         ctx.putImageData(imgData, projection.x, projection.y);
         timeBefore = timeNow;
         xzGo.setComp(0, 0);
@@ -96,7 +115,7 @@ window.onload = ()=> {
         }
         console.log(leftRight)
     });
-    drawZigzag();
+    getDataFromServer();
 }
 function goEye (eye, plane) {
     eye.setComp(2, eye.getComp(2)+xzGo.getComp(1));
@@ -105,13 +124,3 @@ function goEye (eye, plane) {
     plane.x += xzGo.getComp(0);
     return {pl: plane, e: eye};
 }
-/*
-function goR (d) {
-    const m = new Matrix([new Vector([Math.cos(angle), Math.sin(angle)]), new Vector([-1*Math.sin(angle), Math.cos(angle)])]);
-    let v = new Vector([d.eye.x-d.center.x, d.center.y-d.eye.y]);
-    let newV = m.timesVector(v);
-    d.eye.x = newV.vector[0]+d.center.x;
-    d.eye.y = d.center.y-newV.vector[1];
-    return d;
-}
-*/

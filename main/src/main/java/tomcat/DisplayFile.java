@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 public class DisplayFile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        File file = Paths.get("main/src/main/static", req.getRequestURI().substring(1)).toFile();
+        File file = Paths.get("src/main/static", req.getRequestURI().substring(1)).toFile();
         if(!file.exists()) {
             resp.setStatus(404);
             return;
