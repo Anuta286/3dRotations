@@ -1,11 +1,10 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
-let c = {x: 75, y: 75, z: -5};
 let plane = {a: 0, b: 0, c: 10, d: 50};
 let eye = new Vector([0, 0, 100]);
 let xzGo = new Vector([0, 0]);
 let leftRight = 10;
-function initialDrawSmile(xCenter, yCenter) {
+/*function initialDrawSmile(xCenter, yCenter) {
   if (canvas.getContext) {
     ctx.beginPath();
     ctx.arc(xCenter, yCenter, 50, 0, Math.PI*2, true);
@@ -17,7 +16,18 @@ function initialDrawSmile(xCenter, yCenter) {
     ctx.arc(90, 65, 5, 0, Math.PI*2, true);
     ctx.stroke();
   }
-}
+}*/
+/*function initialDrawHouse() {
+    ctx.fillRect(50, 75, 20, 100);
+    ctx.fillRect(50, 75, 100, 30);
+    ctx.fillRect(100, 75, 50, 100);
+    ctx.fillRect(50, 160, 100, 30);
+    ctx.beginPath();
+    ctx.moveTo(50,75);
+    ctx.lineTo(150,75);
+    ctx.lineTo(100,25);
+    ctx.fill();
+} */
 
 function imgDataToPoints(imData) {
     const points = [];
@@ -32,30 +42,24 @@ function imgDataToPoints(imData) {
     return points;
 }
 
-/* function shareDataToServer() {
-    let data = ctx.getImageData(0, 0, canvas.width, canvas.height).data.join();
+function getDataFromServer(pic){
     const httpRequest = new XMLHttpRequest();
-    httpRequest.open("POST", "/data", true);
-    httpRequest.setRequestHeader("Content-Type", "text/plain");
-    httpRequest.onreadystatechange = function() {
-        getDataFromServer();
-    };
-    httpRequest.send(data);
-} */
-
-function getDataFromServer(){
-    const httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = function() {
+    httpRequest.onload = function() {
         const text = httpRequest.responseText;
-        drawZigzag(text.split(','));
+        let data = text.split(',');
+        drawZigzag(data);
     };
-    httpRequest.open("GET", "/drawing", true);
+    if (pic===1) {
+        httpRequest.open("GET", "/drawing/1", true);
+    } else if (pic===2) {
+        httpRequest.open("GET", "/drawing/2", true);
+    }
     httpRequest.send();
 }
 
 function drawZigzag(data) {
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    imgData.data = data;
+    imgData.data.set(data);
     let timeBefore = Date.now();
     const angularVelocity = 1;
     const velocity = new Vector([20, 13.4, 0]);
@@ -88,7 +92,6 @@ function drawZigzag(data) {
 }
 
 window.onload = ()=> {
-    initialDrawSmile(c.x, c.y);
     window.addEventListener('keydown', (event) => {
         if (event.key === 'w') {
             xzGo.setComp(1, xzGo.getComp(1)-10);
@@ -115,7 +118,7 @@ window.onload = ()=> {
         }
         console.log(leftRight)
     });
-    getDataFromServer();
+    getDataFromServer(2);
 }
 function goEye (eye, plane) {
     eye.setComp(2, eye.getComp(2)+xzGo.getComp(1));

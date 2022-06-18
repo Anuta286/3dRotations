@@ -65,7 +65,7 @@ public class TomcatStarter {
         servlet.setServletClass("tomcat.DrawingServlet");
 
         context.addChild(servlet);
-        context.addServletMappingDecoded("/drawing", "drawing-servlet");
+        context.addServletMappingDecoded("/drawing/*", "drawing-servlet");
     }
 
     private static ThreadPoolExecutor createExecutor() {

@@ -12,7 +12,12 @@ import java.util.Scanner;
 public class DrawingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        FileReader fr = new FileReader("text.txt");
+        FileReader fr = null;
+        if (Integer.parseInt(req.getRequestURI().substring(9)) == 1) {
+            fr = new FileReader("smile.txt");
+        } else if (Integer.parseInt(req.getRequestURI().substring(9)) == 2) {
+            fr = new FileReader("house.txt");
+        }
         Scanner scan = new Scanner(fr);
         StringBuilder result = new StringBuilder();
         while (scan.hasNextLine()) {
